@@ -67,13 +67,17 @@ export default function Contato() {
                 placeholder="Escreva sua mensagem aqui..."
               ></textarea>
             </div>
-
+            <div className="flex gap-4 items-center mt-4">
             <button
               type="submit"
               className="bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 shadow-lg"
             >
               Enviar Mensagem
             </button>
+            <button onClick={() => window.location.href = '/'} className="bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 shadow-lg">Voltar</button>
+            </div>
+
+          
           </form>
         </div>
 

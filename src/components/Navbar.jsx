@@ -13,6 +13,10 @@ const NavBar = () => {
         <li>
           <a href="/produtos" className="text-white text-lg hover:text-yellow-300">Produtos</a>
         </li>
+
+        <li>        
+          <a href="/adicionarproduto" className="text-white text-lg hover:text-yellow-300">Adicionar Produtos</a>
+        </li>
         <li>
           <a href="/contato" className="text-white text-lg hover:text-yellow-300">Contato</a>
         </li>

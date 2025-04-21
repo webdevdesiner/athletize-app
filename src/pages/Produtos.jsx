@@ -1,20 +1,67 @@
-import React from 'react';
-import logo from '../assets/logo.png'; // Imagem corretamente importada
-import DefaultLayout from '../layouts/DefaultLayout'; // Importando o layout padrão
+import React, { useState, useEffect } from 'react';
+import DefaultLayout from '../layouts/DefaultLayout';
+import axios from 'axios';
 
-export default function Produtos() {
+const Produtos = () => {
+  const [produtos, setProdutos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/produtos')
+      .then(res => res.json())
+      .then(data => {
+        setProdutos(data);
+        setCarregando(false);
+      })
+      .catch(err => {
+        console.error('Erro ao buscar produtos:', err);
+        setCarregando(false);
+      });
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+      try {
+        await axios.delete(`http://localhost:3000/api/produtos/${id}`);
+        setProdutos(produtos.filter(p => p.id !== id)); // remove da lista local
+      } catch (error) {
+        console.error('Erro ao excluir produto:', error);
+      }
+    }
+  };
+
+  if (carregando) return <p className="text-center mt-10 text-violet-500 font-semibold">Carregando produtos...</p>;
+
   return (
     <DefaultLayout>
-      <div className="w-full h-full p-4 bg-violet-500 text-white flex flex-col flex-grow items-center justify-center">
-      
-      <img src={logo} alt="Logo" className="w-70 h-auto mt-10 p-1 " />
-      
-      <h1 className="text-2xl font-bold mb-1">Em Breve</h1>
-      <p>Estamos em desenvolvimento.</p>
-      <p> Por favor, aguarde.</p>
-
-      <button onClick={() => window.location.href = '/'} className="mt-4 bg-white text-violet-500 py-2 px-4 rounded hover:bg-violet-600 transition duration-300 transform hover:scale-105">voltar</button>
-    </div>
+      <div className="p-6">
+        <h2 className="text-2xl font-bold text-violet-500 mb-6">Produtos</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {produtos.map(produto => (
+            <div key={produto.id} className="bg-white border border-violet-200 rounded-2xl shadow p-4">
+              {produto.foto && (
+                <img
+                  src={produto.foto}
+                  alt={produto.nome}
+                  className="w-full h-40 object-contain rounded-xl mb-4"
+                />
+              )}
+              <h3 className="text-lg font-semibold text-violet-600 mb-1">{produto.nome}</h3>
+              <p className="text-gray-600 text-sm mb-2">{produto.descricao}</p>
+              <p className="text-gray-800 font-medium mb-1">R$ {parseFloat(produto.preco).toFixed(2)}</p>
+              <p className="text-gray-700 text-sm">Estoque: {produto.estoque}</p>
+              <button
+                onClick={() => handleDelete(produto.id)}
+                className="mt-4 text-sm text-red-500 hover:underline"
+              >
+                Excluir
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
     </DefaultLayout>
   );
-}
+};
+
+export default Produtos;
