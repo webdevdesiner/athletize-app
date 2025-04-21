@@ -50,12 +50,17 @@ const Produtos = () => {
               <p className="text-gray-600 text-sm mb-2">{produto.descricao}</p>
               <p className="text-gray-800 font-medium mb-1">R$ {parseFloat(produto.preco).toFixed(2)}</p>
               <p className="text-gray-700 text-sm">Estoque: {produto.estoque}</p>
+              <div className="mt-4 flex gap-4 items-center">
               <button
                 onClick={() => handleDelete(produto.id)}
                 className="mt-4 text-sm text-red-500 hover:underline"
               >
                 Excluir
               </button>
+              <button
+              onClick={() => window.location.href = `/editarproduto/${produto.id}`}
+              className="mt-4 text-sm text-violet-500 hover:underline">Editar</button>
+              </div>
             </div>
           ))}
         </div>
