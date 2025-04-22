@@ -7,6 +7,7 @@ const EditarProduto = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
+    
     nome: '',
     descricao: '',
     preco: '',
@@ -17,30 +18,52 @@ const EditarProduto = () => {
   const [mensagem, setMensagem] = useState('');
 
   useEffect(() => {
-    // Carrega os dados do produto para edição
     axios.get(`http://localhost:3000/api/produtos/${id}`)
-      .then(res => setFormData(res.data))
-      .catch(err => {
+      .then((res) => {
+        setFormData(res.data);
+      })
+      .catch((err) => {
         console.error('Erro ao carregar produto:', err);
         setMensagem('Erro ao carregar produto');
       });
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    const { name, value, files } = e.target;
+
+    if (name === 'foto') {
+      setFormData((prev) => ({
+        ...prev,
+        foto: files[0], // novo arquivo
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const data = new FormData();
+    data.append('nome', formData.nome);
+    data.append('descricao', formData.descricao);
+    data.append('preco', formData.preco);
+    data.append('estoque', formData.estoque);
+    if (formData.foto instanceof File) {
+      data.append('foto', formData.foto); // só envia se for novo arquivo
+    }
+
     try {
-      await axios.put(`http://localhost:3000/api/produtos/${id}`, formData);
+      await axios.put(`http://localhost:3000/api/produtos/${id}`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setMensagem('Produto atualizado com sucesso!');
-      setTimeout(() => navigate('/produtos'), 1500); // redireciona após sucesso
+      setTimeout(() => navigate('/produtos'), 1500);
     } catch (error) {
       console.error('Erro ao atualizar produto:', error);
       setMensagem('Erro ao atualizar produto');
@@ -50,7 +73,7 @@ const EditarProduto = () => {
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-3xl font-semibold text-violet-500 mb-6">Editar Produto</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
         <input
           type="text"
           name="nome"
@@ -87,14 +110,13 @@ const EditarProduto = () => {
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
         <input
-          type="text"
+          type="file"
           name="foto"
-          placeholder="URL da Foto"
-          value={formData.foto}
           onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+          accept="image/*"
+          className="..."
         />
+
         <div className="grid grid-cols-2 gap-4">
           <button
             type="submit"
@@ -102,7 +124,6 @@ const EditarProduto = () => {
           >
             Salvar Alterações
           </button>
-
           <button
             type="button"
             onClick={() => navigate('/produtos')}

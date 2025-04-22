@@ -41,10 +41,10 @@ const Produtos = () => {
             <div key={produto.id} className="bg-white border border-violet-200 rounded-2xl shadow p-4">
               {produto.foto && (
                 <img
-                  src={produto.foto}
-                  alt={produto.nome}
-                  className="w-full h-40 object-contain rounded-xl mb-4"
-                />
+                src={`http://localhost:3000${produto.foto}`}
+                alt={produto.nome}
+                className="w-full h-40 object-contain rounded-xl mb-4"
+              />
               )}
               <h3 className="text-lg font-semibold text-violet-600 mb-1">{produto.nome}</h3>
               <p className="text-gray-600 text-sm mb-2">{produto.descricao}</p>
