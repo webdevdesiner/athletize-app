@@ -21,6 +21,7 @@ const EditarProduto = () => {
     axios.get(`http://localhost:3000/api/produtos/${id}`)
       .then((res) => {
         setFormData(res.data);
+        console.log('Produto carregado do banco para o imput de edição:');
       })
       .catch((err) => {
         console.error('Erro ao carregar produto:', err);
@@ -56,7 +57,7 @@ const EditarProduto = () => {
       data.append('foto', formData.foto); // só envia se for novo arquivo
     }
 
-    try {
+    try { console.log('ID recebido')
       await axios.put(`http://localhost:3000/api/produtos/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
