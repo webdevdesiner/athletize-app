@@ -3,9 +3,10 @@ import imgBanner1 from '../assets/banner1.png';
 import imgBanner2 from '../assets/banner2.png';
 import imgBanner3 from '../assets/banner3.png';
 import imgBanner4 from '../assets/banner4.png';
+import imgBanner5 from '../assets/banner5.png';
 
 export default function Header() {
-  const images = [imgBanner1, imgBanner2, imgBanner3, imgBanner4];
+  const images = [imgBanner1, imgBanner2, imgBanner3, imgBanner4, imgBanner5];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageVisible, setIsImageVisible] = useState(true); // Controla a visibilidade da imagem
 
